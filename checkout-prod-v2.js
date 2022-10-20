@@ -1,20 +1,11 @@
-function createPhonepePaymentRequest(data, payable_amount){
+function createPhonepePaymentRequest(data, payableAmount){
     if (!window.PaymentRequest) return null;
 
     var paymentRequestPhonepe = new PaymentRequest([{
         supportedMethods: ["https://mercury.phonepe.com/transact/checkout"],
         data: data
-    }], {total: {label: 'Cart Amount', amount: {currency: 'INR', value: payable_amount}}});
+    }], {total: {label: 'Cart Amount', amount: {currency: 'INR', value: payableAmount}}});
     return paymentRequestPhonepe;
-}
-
-function openPhonepeExpressbuy(ppeUrl, handleResponse, handleError) {
-    var data = {
-        url: ppeUrl,
-    };
-    var paymentRequestPhonepe = createPhonepePaymentRequest(data, 1);
-    if(paymentRequestPhonepe == null) return;
-    paymentRequestPhonepe.show().then(handlePaymentResponse).catch(handleError);
 }
 
 async function getExpressbuyResults(paymentRequestContext){
@@ -33,40 +24,39 @@ async function getExpressbuyResults(paymentRequestContext){
 }
 
 async function warmupAndSaveResults(paymentRequestContext) {
-    console.log(navigator.userAgent);
-    var userOperatingSystem = navigator.userAgent.split(';')[1].trim();
-    var network = navigator.connection.effectiveType;
+    var network = navigator?.connection?.effectiveType ?? null;
     var isAndroid = false;
     var paymentRequestSupported = false;
     var canMakePayment = false;
     var hasEnrolledInstrument = false;
-    var retries = sessionStorage.getItem('hasEnrolledInstrumentRetries') ?? 0;
-    if(userOperatingSystem.includes("Android"))
-        isAndroid = true;
+    var retries = sessionStorage?.getItem('hasEnrolledInstrumentRetries') ?? 0;
     var elapsedTime = -1;
-    console.log(userOperatingSystem);
-    console.log(isAndroid);
-
     var data = {
         url: "ppe://expressbuy",
         constraints : paymentRequestContext?.constraints ?? []
-    }
+    };
     var paymentRequestPhonepe = createPhonepePaymentRequest(data, 1);
-    if(isAndroid && paymentRequestPhonepe != null)
-    {
+    var userOperatingSystem = navigator?.userAgent?.split(';')[1]?.trim() ?? null;
+
+    if(userOperatingSystem?.includes("Android") ?? false)
+        isAndroid = true;
+    console.log(userOperatingSystem);
+    console.log("isAndroid: ", isAndroid);
+
+    if(isAndroid && paymentRequestPhonepe != null){
         paymentRequestSupported = true;
-        canMakePayment = await paymentRequestPhonepe.canMakePayment();
-        var startTime = performance.now();
+        canMakePayment = await paymentRequestPhonepe?.canMakePayment() ?? false;
+        var startTime = performance?.now() ?? 0;
         var pageRetryLimit = 3;
-        while(canMakePayment == true && retries < 9 && hasEnrolledInstrument == false && pageRetryLimit > 0)
-        {
-            hasEnrolledInstrument = await paymentRequestPhonepe.hasEnrolledInstrument()
-            if(hasEnrolledInstrument) break;
+        while(canMakePayment == true && retries < 9 && hasEnrolledInstrument == false && pageRetryLimit > 0){
+            hasEnrolledInstrument = await paymentRequestPhonepe?.hasEnrolledInstrument() ?? false;
+            if(hasEnrolledInstrument) 
+                break;
             paymentRequestPhonepe = createPhonepePaymentRequest(data, 1);
             retries++;
             pageRetryLimit--;
         }
-        var endTime = performance.now();
+        var endTime = performance?.now() ?? 0;
         elapsedTime = endTime - startTime;
     }
     sessionStorage.setItem('hasEnrolledInstrumentRetries', retries);
