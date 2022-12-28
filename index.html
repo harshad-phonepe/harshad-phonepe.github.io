@@ -1,0 +1,33 @@
+<h1>Test</h1>
+<script>
+   function createPhonepePaymentRequest(data, payable_amount){
+    if (!window.PaymentRequest) return null;
+ 
+    var paymentRequestPhonepe = new PaymentRequest([{
+        supportedMethods: ["https://mercury-stg.phonepe.com/transact/checkout"],
+        data: data
+    }], {total: {label: 'Cart Amount', amount: {currency: 'INR', value: payable_amount}}});
+    return paymentRequestPhonepe;
+  }
+ 
+  function sleep(milliseconds) {
+     var currentTime = new Date().getTime();
+
+     while (currentTime + milliseconds >= new Date().getTime()) {
+     }
+  }
+
+  var data = {
+          url: "ppe://expressbuy",
+      }
+
+  var time = 1;
+  while(true){
+      var paymentRequestPhonepe = createPhonepePaymentRequest(data, 1);
+      var hasEnrolledInstrument = await paymentRequestPhonepe.hasEnrolledInstrument();
+      console.log(time + ' ms since last attempt');
+      console.log('result: ' + hasEnrolledInstrument);
+      time = time*2;
+      sleep(time);
+  }
+</script>
