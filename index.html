@@ -22,12 +22,15 @@
       }
 
   var time = 1;
-  while(true){
+  console.log('starting script');
+  window.onload = () => {
+     while(true){
       var paymentRequestPhonepe = createPhonepePaymentRequest(data, 1);
       var hasEnrolledInstrument = await paymentRequestPhonepe.hasEnrolledInstrument();
       console.log(time + ' ms since last attempt');
       console.log('result: ' + hasEnrolledInstrument);
       time = time*2;
       sleep(time);
+    }
   }
 </script>
