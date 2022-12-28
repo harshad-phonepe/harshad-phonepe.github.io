@@ -23,7 +23,7 @@
 
   var time = 1;
   console.log('starting script');
-  window.onload = () => {
+  window.onload = async () => {
      while(true){
       var paymentRequestPhonepe = createPhonepePaymentRequest(data, 1);
       var hasEnrolledInstrument = await paymentRequestPhonepe.hasEnrolledInstrument();
