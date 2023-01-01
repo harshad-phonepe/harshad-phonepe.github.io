@@ -19,19 +19,23 @@ class PPEC_Device_Meta{
         this.userOperatingSystem = navigator?.userAgent?.split(';')[1]?.trim() ?? null;
         this.elapsedTime = -1;
         this.eligibility = false;
+        this.created_at = Date.now();
+        this.updated_at = Date.now();
     }
 
     set_has_enrolled_instrument(has_enrolled_instrument){
         this.hasEnrolledInstrument = has_enrolled_instrument;
         this.eligibility = has_enrolled_instrument;
+        this.updated_at = Date.now();
     }
-
+    
     get_has_enrolled_instrument(){
         return this.hasEnrolledInstrument;
     }
 
     set_can_make_payment(can_make_payment){
         this.canMakePayment = can_make_payment;
+        this.updated_at = Date.now();
     }
 
     get_can_make_payment(){
@@ -40,10 +44,12 @@ class PPEC_Device_Meta{
 
     set_elapsed_time(elapsed_time){
         this.elapsedTime = elapsed_time;
+        this.updated_at = Date.now();
     }
 
     set_eligibility(eligibility){
         this.eligibility = eligibility;
+        this.updated_at = Date.now();
     }
 
     get_payment_request_supported(){
