@@ -77,7 +77,7 @@ class PPEC_Process_Tracker{
 function ppec_create_payment_request(payment_request_data, payable_amount) {
     console.log('ppec_create_payment_request called at ' + Date.now());
     return new PaymentRequest([{
-        supportedMethods: ["https://mercury.phonepe.com/transact/checkout"],
+        supportedMethods: ["https://mercury-stg.phonepe.com/transact/checkout"],
         data: payment_request_data
     }], { 
             total: {
