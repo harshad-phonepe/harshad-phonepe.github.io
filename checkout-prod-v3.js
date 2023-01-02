@@ -145,7 +145,7 @@ async function ppec_get_device_meta(payment_request_context){
 }
 
 async function ppec_check_app_and_cache_device_meta(payment_request_context) {
-    if(ppec_is_eligibility_cache_true() && ppec_is_device_meta_cache_valid()) return;
+    if(ppec_is_device_meta_cache_valid() && ppec_is_eligibility_cache_true()) return;
     var device_meta = await ppec_get_device_meta(payment_request_context);
     console.log('detection finished');
     console.log(device_meta);
